@@ -48,6 +48,7 @@
     "function-bind": "^1.1.1",
     "glob": "^7.2.3",
     "glob-parent": "^5.1.2",
+    "handlebars": "^4.7.7",
     "has": "^1.0.3",
     "inflight": "^1.0.6",
     "inherits": "^2.0.4",
