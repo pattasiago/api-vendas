@@ -7,10 +7,10 @@ interface IRequest {
   id: string;
 }
 
-class ShowUserService {
+class ShowProfileService {
   public async execute({ id }: IRequest): Promise<User> {
     const usersRepository = getCustomRepository(UserRepository);
-    const user = await usersRepository.findOne(id);
+    const user = await usersRepository.findById(id);
 
     if (!user) {
       throw new AppError('User Not Found!');
@@ -19,4 +19,4 @@ class ShowUserService {
   }
 }
 
-export default ShowUserService;
+export default ShowProfileService;

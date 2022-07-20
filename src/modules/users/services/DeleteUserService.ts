@@ -15,7 +15,7 @@ class DeleteUserService {
       throw new AppError('User Not Found!');
     }
 
-    usersRepository.remove(user);
+    await usersRepository.remove(user);
   }
 }
 
