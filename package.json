@@ -85,6 +85,7 @@
     "ts-node": "^10.8.1",
     "tsconfig": "^7.0.0",
     "typeorm": "0.2.29",
+    "typeorm-pagination": "^2.0.3",
     "v8-compile-cache-lib": "^3.0.1",
     "wrappy": "^1.0.2",
     "xtend": "^4.0.2",
