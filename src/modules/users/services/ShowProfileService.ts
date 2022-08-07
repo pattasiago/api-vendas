@@ -1,15 +1,17 @@
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import User from '../infra/typeorm/entities/User';
-import { UserRepository } from '../infra/typeorm/repositories/UsersRepository';
+import { IUsersRepository } from '../domain/repositories/IUsersRepository';
+import { IUser } from '../domain/models/IUser';
+import { injectable, inject } from 'tsyringe';
 
-interface IRequest {
-  id: string;
-}
-
+@injectable()
 class ShowProfileService {
-  public async execute({ id }: IRequest): Promise<User> {
-    const usersRepository = getCustomRepository(UserRepository);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
+  public async execute(id: string): Promise<IUser> {
+    const usersRepository = this.usersRepository;
     const user = await usersRepository.findById(id);
 
     if (!user) {

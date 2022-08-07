@@ -2,8 +2,8 @@ import RedisCache from '@shared/cache/RedisCache';
 import AppError from '@shared/errors/AppError';
 import { IUpdateProduct } from '../domain/models/IUpdateProduct';
 import { IProductsRepository } from '../domain/repositories/IProductsRepository';
-import Product from '../infra/typeorm/entities/Product';
 import { injectable, inject } from 'tsyringe';
+import { IProduct } from '../domain/models/IProduct';
 
 @injectable()
 class UpdateProductService {
@@ -17,7 +17,7 @@ class UpdateProductService {
     name,
     price,
     quantity,
-  }: IUpdateProduct): Promise<Product> {
+  }: IUpdateProduct): Promise<IProduct> {
     const productsRepository = this.productsRepository;
     const product = await productsRepository.findOne(id);
     const redisCache = new RedisCache();

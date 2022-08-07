@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import { IProductsRepository } from '../domain/repositories/IProductsRepository';
-import Product from '../infra/typeorm/entities/Product';
 import { injectable, inject } from 'tsyringe';
+import { IProduct } from '../domain/models/IProduct';
 
 @injectable()
 class ShowProductService {
@@ -10,7 +10,7 @@ class ShowProductService {
     private productsRepository: IProductsRepository,
   ) {}
 
-  public async execute(id: string): Promise<Product> {
+  public async execute(id: string): Promise<IProduct> {
     const productsRepository = this.productsRepository;
     const product = await productsRepository.findOne(id);
 

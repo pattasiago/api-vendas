@@ -1,26 +1,25 @@
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import User from '../infra/typeorm/entities/User';
-import { UserRepository } from '../infra/typeorm/repositories/UsersRepository';
 import { compare, hash } from 'bcryptjs';
+import { IUpdateProfileService } from '../domain/models/IUpdateProfileService';
+import { injectable, inject } from 'tsyringe';
+import { IUsersRepository } from '../domain/repositories/IUsersRepository';
+import { IUser } from '../domain/models/IUser';
 
-interface IRequest {
-  id: string;
-  name: string;
-  email: string;
-  password?: string;
-  old_password?: string;
-}
-
+@injectable()
 class UpdateProfileService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
   public async execute({
     id,
     name,
     email,
     password,
     old_password,
-  }: IRequest): Promise<User> {
-    const usersRepository = getCustomRepository(UserRepository);
+  }: IUpdateProfileService): Promise<IUser> {
+    const usersRepository = this.usersRepository;
     const user = await usersRepository.findOne(id);
 
     if (!user) {

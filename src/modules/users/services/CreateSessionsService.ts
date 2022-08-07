@@ -1,24 +1,24 @@
 import AppError from '@shared/errors/AppError';
 import { compare } from 'bcryptjs';
-import { JsonWebTokenError, sign } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
-import { getCustomRepository } from 'typeorm';
-import User from '../infra/typeorm/entities/User';
-import { UserRepository } from '../infra/typeorm/repositories/UsersRepository';
+import { IUsersRepository } from '../domain/repositories/IUsersRepository';
+import { injectable, inject } from 'tsyringe';
+import { ISessionRequest } from '../domain/models/ISessionRequest';
+import { ISessionResponse } from '../domain/models/ISessionResponse';
 
-interface IRequest {
-  email: string;
-  password: string;
-}
-
-interface IResponse {
-  user: User;
-  token: string;
-}
-
+@injectable()
 class CreateSessionService {
-  public async execute({ email, password }: IRequest): Promise<IResponse> {
-    const usersRepository = getCustomRepository(UserRepository);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
+  public async execute({
+    email,
+    password,
+  }: ISessionRequest): Promise<ISessionResponse> {
+    const usersRepository = this.usersRepository;
     const user = await usersRepository.findByEmail(email);
 
     if (!user) {

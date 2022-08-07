@@ -1,19 +1,24 @@
 import AppError from '@shared/errors/AppError';
 import path from 'path';
-import { getCustomRepository } from 'typeorm';
-import User from '../infra/typeorm/entities/User';
-import { UserRepository } from '../infra/typeorm/repositories/UsersRepository';
 import uploadConfig from '@config/upload';
 import fs from 'fs';
+import { IUsersRepository } from '../domain/repositories/IUsersRepository';
+import { injectable, inject } from 'tsyringe';
+import { IUpdateUserAvatar } from '../domain/models/IUpdateUserAvatar';
+import { IUser } from '../domain/models/IUser';
 
-interface IRequest {
-  userId: string;
-  avatarFileName?: string;
-}
-
+@injectable()
 class UpdateUserAvatarService {
-  public async execute({ userId, avatarFileName }: IRequest): Promise<User> {
-    const usersRepository = getCustomRepository(UserRepository);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
+  public async execute({
+    userId,
+    avatarFileName,
+  }: IUpdateUserAvatar): Promise<IUser> {
+    const usersRepository = this.usersRepository;
     const user = await usersRepository.findById(userId);
 
     if (!user) {

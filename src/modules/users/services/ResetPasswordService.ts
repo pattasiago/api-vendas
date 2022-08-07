@@ -1,18 +1,24 @@
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import { UserRepository } from '../infra/typeorm/repositories/UsersRepository';
-import { UserTokensRepository } from '../infra/typeorm/repositories/UserTokensRepository';
 import { isAfter, addHours } from 'date-fns';
 import { hash } from 'bcryptjs';
-interface IRequest {
-  token: string;
-  password: string;
-}
+import { IUsersRepository } from '../domain/repositories/IUsersRepository';
+import { injectable, inject } from 'tsyringe';
+import { IUserTokensRepository } from '../domain/repositories/IUserTokensRepository';
+import { IResetPassword } from '../domain/models/IResetPassoword';
 
+@injectable()
 class ResetPasswordService {
-  public async execute({ token, password }: IRequest): Promise<void> {
-    const usersRepository = getCustomRepository(UserRepository);
-    const userTokensRepository = getCustomRepository(UserTokensRepository);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+
+    @inject('UserTokensRepository')
+    private userTokensRepository: IUserTokensRepository,
+  ) {}
+
+  public async execute({ token, password }: IResetPassword): Promise<void> {
+    const usersRepository = this.usersRepository;
+    const userTokensRepository = this.userTokensRepository;
 
     const userToken = await userTokensRepository.findByToken(token);
     if (!userToken) {

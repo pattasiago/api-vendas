@@ -82,7 +82,7 @@ class CreateOrderService {
     });
 
     const { order_products } = order;
-    console.log(existsProduct);
+    // console.log(existsProduct);
     const updateProductsQuantity = order_products.map(product => ({
       id: product.product_id,
       quantity:
