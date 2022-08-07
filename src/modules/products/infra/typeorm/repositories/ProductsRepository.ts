@@ -31,12 +31,8 @@ export class ProductRepository implements IProductsRepository {
     return this.ormRepository.remove(product);
   }
 
-  public async findOne(name: string): Promise<Product | undefined> {
-    return this.ormRepository.findOne({
-      where: {
-        name,
-      },
-    });
+  public async findOne(id: string): Promise<Product | undefined> {
+    return this.ormRepository.findOne(id);
   }
 
   public async find(ids?: string[]): Promise<Product[]> {
@@ -50,7 +46,11 @@ export class ProductRepository implements IProductsRepository {
     });
   }
   public async findByName(name: string): Promise<Product | undefined> {
-    const product = this.findOne(name);
+    const product = this.ormRepository.findOne({
+      where: {
+        name,
+      },
+    });
     return product;
   }
 
