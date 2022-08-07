@@ -1,28 +1,62 @@
-import { EntityRepository, In, Repository } from 'typeorm';
+import { ICreateProduct } from '@modules/products/domain/models/ICreateProduct';
+import { IUpdateStockProduct } from '@modules/products/domain/models/IUpdateStockProduct';
+
+import {
+  IFindProducts,
+  IProductsRepository,
+} from '@modules/products/domain/repositories/IProductsRepository';
+import { getRepository, In, Repository } from 'typeorm';
 import Product from '../entities/Product';
 
-interface IFindProducts {
-  id: string;
-}
+export class ProductRepository implements IProductsRepository {
+  private ormRepository: Repository<Product>;
 
-@EntityRepository(Product)
-export class ProductRepository extends Repository<Product> {
-  public async findByName(name: string): Promise<Product | undefined> {
-    const product = this.findOne({
+  constructor() {
+    this.ormRepository = getRepository(Product);
+  }
+
+  public create({ name, price, quantity }: ICreateProduct): Product {
+    return this.ormRepository.create({ name, price, quantity });
+  }
+
+  public async save(product: Product): Promise<Product> {
+    return this.ormRepository.save(product);
+  }
+
+  public async updateStock(products: IUpdateStockProduct[]): Promise<void> {
+    await this.ormRepository.save(products);
+  }
+
+  public async remove(product: Product): Promise<Product> {
+    return this.ormRepository.remove(product);
+  }
+
+  public async findOne(name: string): Promise<Product | undefined> {
+    return this.ormRepository.findOne({
       where: {
         name,
       },
     });
+  }
+
+  public async find(ids?: string[]): Promise<Product[]> {
+    if (!ids) {
+      return this.ormRepository.find();
+    }
+    return this.ormRepository.find({
+      where: {
+        id: In(ids),
+      },
+    });
+  }
+  public async findByName(name: string): Promise<Product | undefined> {
+    const product = this.findOne(name);
     return product;
   }
 
   public async findAllByIds(products: IFindProducts[]): Promise<Product[]> {
     const productsIds = products.map(product => product.id);
-    const existsProducts = await this.find({
-      where: {
-        id: In(productsIds),
-      },
-    });
+    const existsProducts = await this.find(productsIds);
     return existsProducts;
   }
 }

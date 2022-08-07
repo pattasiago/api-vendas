@@ -1,6 +1,6 @@
 import Customer from '@modules/customers/infra/typeorm/entities/Customer';
+import { IOrder } from '@modules/orders/domain/models/IOrder';
 import {
-  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -12,7 +12,7 @@ import {
 import OrderProducts from './OrderProducts';
 
 @Entity('orders')
-class Order {
+class Order implements IOrder {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

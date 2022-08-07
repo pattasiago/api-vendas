@@ -1,16 +1,18 @@
+import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import Customer from '../infra/typeorm/entities/Customer';
-import { CustomersRepository } from '../infra/typeorm/repositories/CustomerRepository';
+import { ICustomer } from '../domain/models/ICustomer';
+import { IShowCustomer } from '../domain/models/IShowCustomer';
+import { ICustomerRepository } from '../domain/repositories/ICustomerRepository';
 
-interface IRequest {
-  id: string;
-}
-
+@injectable()
 class ShowCustomerService {
-  public async execute({ id }: IRequest): Promise<Customer> {
-    const customersRepository = getCustomRepository(CustomersRepository);
-    const customer = await customersRepository.findById(id);
+  constructor(
+    @inject('CustomersRepository')
+    private customersRepository: ICustomerRepository,
+  ) {}
+
+  public async execute({ id }: IShowCustomer): Promise<ICustomer> {
+    const customer = await this.customersRepository.findById(id);
 
     if (!customer) {
       throw new AppError('User Not Found!');

@@ -1,25 +1,36 @@
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import Order from '../infra/typeorm/entities/Order';
-import { OrdersRepository } from '../infra/typeorm/repositories/OrdersRepository';
-import { CustomersRepository } from '@modules/customers/infra/typeorm/repositories/CustomerRepository';
-import { ProductRepository } from '@modules/products/infra/typeorm/repositories/ProductsRepository';
+import { IOrder } from '../domain/models/IOrder';
+import { injectable, inject } from 'tsyringe';
+import { IOrdersRepository } from '../domain/repositories/IOrdersRepository';
+import { ICustomerRepository } from '@modules/customers/domain/repositories/ICustomerRepository';
+import { IProductsRepository } from '@modules/products/domain/repositories/IProductsRepository';
+import { IProduct } from '@modules/products/domain/models/IProduct';
 
-interface IProduct {
-  id: string;
-  quantity: number;
-}
-
-interface IRequest {
+interface ICreateOrder {
   customer_id: string;
   products: IProduct[];
 }
 
+@injectable()
 class CreateOrderService {
-  public async execute({ customer_id, products }: IRequest): Promise<Order> {
-    const ordersRepository = getCustomRepository(OrdersRepository);
-    const customersRepository = getCustomRepository(CustomersRepository);
-    const productsRepository = getCustomRepository(ProductRepository);
+  constructor(
+    @inject('OrdersRepository')
+    private ordersRepository: IOrdersRepository,
+
+    @inject('CustomersRepository')
+    private customersRepository: ICustomerRepository,
+
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
+
+  public async execute({
+    customer_id,
+    products,
+  }: ICreateOrder): Promise<IOrder> {
+    const ordersRepository = this.ordersRepository;
+    const customersRepository = this.customersRepository;
+    const productsRepository = this.productsRepository;
 
     const customerExists = await customersRepository.findById(customer_id);
 
@@ -67,7 +78,7 @@ class CreateOrderService {
 
     const order = await ordersRepository.createOrder({
       customer: customerExists,
-      products: serializeProducts,
+      order_products: serializeProducts,
     });
 
     const { order_products } = order;
@@ -79,7 +90,7 @@ class CreateOrderService {
         product.quantity,
     }));
 
-    await productsRepository.save(updateProductsQuantity);
+    productsRepository.updateStock(updateProductsQuantity);
 
     return order;
   }

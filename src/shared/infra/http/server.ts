@@ -7,6 +7,7 @@ import { errors } from 'celebrate';
 import routes from './routes';
 import AppError from '@shared/errors/AppError';
 import '@shared/infra/typeorm';
+import '@shared/container';
 import uploadConfig from '@config/upload';
 import { pagination } from 'typeorm-pagination';
 import rateLimiter from './middlewares/rateLimiter';

@@ -1,24 +1,24 @@
 import RedisCache from '@shared/cache/RedisCache';
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
+import { IUpdateProduct } from '../domain/models/IUpdateProduct';
+import { IProductsRepository } from '../domain/repositories/IProductsRepository';
 import Product from '../infra/typeorm/entities/Product';
-import { ProductRepository } from '../infra/typeorm/repositories/ProductsRepository';
+import { injectable, inject } from 'tsyringe';
 
-interface IRequest {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
+@injectable()
 class UpdateProductService {
+  constructor(
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
+
   public async execute({
     id,
     name,
     price,
     quantity,
-  }: IRequest): Promise<Product> {
-    const productsRepository = getCustomRepository(ProductRepository);
+  }: IUpdateProduct): Promise<Product> {
+    const productsRepository = this.productsRepository;
     const product = await productsRepository.findOne(id);
     const redisCache = new RedisCache();
 
