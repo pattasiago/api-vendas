@@ -15,7 +15,7 @@ export interface ICustomerRepository {
   findByEmail(email: string): Promise<ICustomer | undefined>;
   create(data: ICreateCustomer): ICustomer;
   save(data: ICustomer): Promise<ICustomer>;
-  remove(data: IDeleteCustomer): Promise<ICustomer>;
+  remove(data: IDeleteCustomer): Promise<ICustomer | undefined>;
   findAll(data: SearchParams): Promise<IListCustomer | undefined>;
   findOne(id: string): Promise<ICustomer | undefined>;
 }
