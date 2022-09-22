@@ -7,9 +7,11 @@ import { OrdersRepository } from '@modules/orders/infra/typeorm/repositories/Ord
 import { IProductsRepository } from '@modules/products/domain/repositories/IProductsRepository';
 import { ProductRepository } from '@modules/products/infra/typeorm/repositories/ProductsRepository';
 import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
-import { UserRepository } from '@modules/users/infra/typeorm/repositories/UsersRepository';
+import { UsersRepository } from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import { IUserTokensRepository } from '@modules/users/domain/repositories/IUserTokensRepository';
 import { UserTokensRepository } from '@modules/users/infra/typeorm/repositories/UserTokensRepository';
+
+import '@modules/users/providers';
 
 //Para manter uma única instância da Classe CustomersRepository durante o ciclo de vida da Aplicação
 container.registerSingleton<ICustomerRepository>(
@@ -29,7 +31,7 @@ container.registerSingleton<IProductsRepository>(
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
-  UserRepository,
+  UsersRepository,
 );
 
 container.registerSingleton<IUserTokensRepository>(

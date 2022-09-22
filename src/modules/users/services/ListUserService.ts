@@ -11,7 +11,7 @@ class ListUserService {
 
   public async execute(): Promise<IUser[]> {
     const usersRepository = this.usersRepository;
-    const users = await usersRepository.find();
+    const users = await usersRepository.findAll();
     return users;
   }
 }
