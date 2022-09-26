@@ -27,3 +27,7 @@ jobs:
         uses: actions/setup-node@v3.4.1
         with:
           node-version: 16.17.1
+          
+      - name: Install Project
+        run: |
+              npm install;
