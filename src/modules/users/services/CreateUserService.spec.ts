@@ -37,6 +37,6 @@ describe('CreateUser', () => {
       password: '123456',
     });
 
-    expect(customer).rejects.toBeInstanceOf(FakeHashProvider);
+    expect(customer).rejects.toBeInstanceOf(AppError);
   });
 });
