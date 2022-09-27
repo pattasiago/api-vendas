@@ -31,7 +31,7 @@ jobs:
         run: |
               npm install;
 
-      - name: Test Executiion
+      - name: Test Execution
         run: |
               npx jest;
       
@@ -48,6 +48,6 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            iagopattas/teste:${{github.run_number}}
+            iagopattas/teste:${{github.sha}}
             iagopattas/teste:latest
       
