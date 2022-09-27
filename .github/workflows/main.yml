@@ -34,3 +34,20 @@ jobs:
       - name: Test Executiion
         run: |
               npx jest;
+      
+      - name: Docker Login
+        uses: docker/login-action@v2.0.0
+        with:
+          username: {secrets.DOCKER_USERNAME}
+          password: {secrets.DOCKER_ACCESSTOKEN}
+      
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v3.1.1
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: |
+            iagopattas/teste:v1
+            iagopattas/test:latest
+      
