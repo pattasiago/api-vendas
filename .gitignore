@@ -11,3 +11,4 @@ dist
 uploads/*
 !uploads/.gitkeep
 setup_for_node_typescript.ipynb
+.docker/dbdata
